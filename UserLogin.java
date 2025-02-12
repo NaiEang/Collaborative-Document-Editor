@@ -3,7 +3,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Scanner;
 
-public class UserRegistration {
+public class UserLogin {
     private static final String USERS_FILE = "users.txt";
 
     public static void main(String[] args) {
@@ -12,30 +12,30 @@ public class UserRegistration {
         System.out.print("Enter username: ");
         String username = scanner.nextLine();
 
-        if (userExists(username)) {
-            System.out.println("User already exists!");
-            return;
-        }
-
         System.out.print("Enter password: ");
         String password = scanner.nextLine();
-        String hashedPassword = hashPassword(password);
 
-        saveUser(username, hashedPassword);
-        System.out.println("Registration successful!");
-        scanner.close();
+        if (authenticateUser(username, password)) {
+            System.out.println("Login successful! Welcome, " + username + " 🎉");
+        } else {
+            System.out.println("Invalid username or password.");
+        }
+    scanner.close();
     }
 
-    private static boolean userExists(String username) {
+    private static boolean authenticateUser(String username, String password) {
         try (BufferedReader reader = new BufferedReader(new FileReader(USERS_FILE))) {
             String line;
             while ((line = reader.readLine()) != null) {
-                if (line.split(":")[0].equals(username)) {
-                    return true;
+                String[] userData = line.split(":"); // Split "username:hashed_password"
+                if (userData[0].equals(username)) { // Check if username matches
+                    String storedHashedPassword = userData[1];
+                    String enteredHashedPassword = hashPassword(password);
+                    return storedHashedPassword.equals(enteredHashedPassword);
                 }
             }
         } catch (IOException e) {
-            // File might not exist yet, which is fine
+            System.out.println("Error reading user data.");
         }
         return false;
     }
@@ -51,15 +51,6 @@ public class UserRegistration {
             return hexString.toString();
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
-        }
-    }
-
-    private static void saveUser(String username, String hashedPassword) {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(USERS_FILE, true))) {
-            writer.write(username + ":" + hashedPassword);
-            writer.newLine();
-        } catch (IOException e) {
-            System.out.println("Error saving user.");
         }
     }
 }
