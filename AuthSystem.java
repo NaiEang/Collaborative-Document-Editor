@@ -10,7 +10,7 @@ public class AuthSystem {
         Scanner scanner = new Scanner(System.in);
 
         while (true) {
-            System.out.println("\n=== Welcome to the System ===");
+            System.out.println("\n=== Welcome to the Collaborative Document Editor System ===");
             System.out.println("1. Register");
             System.out.println("2. Login");
             System.out.println("3. Exit");
