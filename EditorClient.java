@@ -2,8 +2,9 @@ import java.io.*;
 import java.net.*;
 import java.util.Scanner;
 
+
 public class EditorClient {
-    private static final String SERVER_ADDRESS = "localhost";  // Change to the server's IP if needed
+    private static final String SERVER_ADDRESS = "192.168.240.255";  // Change to the server's IP 
     private static final int PORT = 12345;
 
     public static void main(String[] args) {
@@ -11,7 +12,8 @@ public class EditorClient {
             Socket socket = new Socket(SERVER_ADDRESS, PORT);
             BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
-            Scanner scanner = new Scanner(System.in)
+            Scanner scanner = new Scanner(System.in);
+            FileWriter fileWriter = new FileWriter("output.txt");
         ) {
             // Start a thread to listen for incoming messages from the server
             new Thread(() -> {
@@ -19,6 +21,10 @@ public class EditorClient {
                     String serverMessage;
                     while ((serverMessage = in.readLine()) != null) {
                         System.out.println(serverMessage);
+
+                        // Write the message to a file
+                        fileWriter.write(serverMessage + "\n");
+                        fileWriter.flush();
                     }
                 } catch (IOException e) {
                     System.out.println("Connection closed.");
