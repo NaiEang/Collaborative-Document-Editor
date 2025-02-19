@@ -34,12 +34,19 @@ public class EditorClient {
             System.out.println("Start typing. Type ':q' to exit.");
 
             // Read user input and send to server
+            StringBuilder fileContent= new StringBuilder();
             while (true) {
                 String userInput = scanner.nextLine();
                 if (userInput.equalsIgnoreCase(":q")) {
                     break;
+                }else if(userInput.equalsIgnoreCase(":save")){
+                    out.println(":save"); // Send the command to the server
+                    out.println(fileContent.toString()); // Send the file content to the server
+                    System.out.println("File saved.");
+                    fileContent.setLength(0); // Clear the file content
                 }
                 out.println(userInput);
+                fileContent.append(userInput).append("\n"); //Store content
             }
         } catch (IOException e) {
             System.out.println("Unable to connect to server: " + e.getMessage());
