@@ -5,9 +5,9 @@ import java.util.Date;
 import java.util.Scanner;
 
 public class EditorClient2 {
-    private static final String SERVER_ADDRESS = "192.168.240.255";  // Change as needed
+    private static final String SERVER_ADDRESS = "192.168.241.95";  // Change as needed
     private static final int PORT = 12345;
-    private static final String DIRECTORY = "C:\\Users\\YourUsername\\Documents\\TextLibrary"; // Change to your library path
+    private static final String DIRECTORY = "D:\\!clone2\\code"; // Change to your library path
 
     public static void main(String[] args) {
         // Ensure directory exists
@@ -39,8 +39,13 @@ public class EditorClient2 {
             new Thread(() -> {
                 try {
                     String serverMessage;
+                    int skipLines =2;
                     while ((serverMessage = in.readLine()) != null) {
                         System.out.println(serverMessage);
+                        if (skipLines > 0) {
+                        skipLines--;
+                        continue;
+                        }
                         writer.write(serverMessage);
                         writer.newLine();
                         writer.flush();
