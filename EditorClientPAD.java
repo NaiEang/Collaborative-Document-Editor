@@ -4,7 +4,7 @@ import java.net.Socket;
 import java.util.Scanner;
 
 public class EditorClientPAD {
-    private static final String SERVER_ADDRESS = "192.168.241.95";
+    private static final String SERVER_ADDRESS = "192.168.242.101";
     private static final int PORT = 11111;
     private static final Scanner scanner = new Scanner(System.in);
 
