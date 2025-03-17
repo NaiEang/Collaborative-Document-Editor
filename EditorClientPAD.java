@@ -3,17 +3,24 @@ import java.net.Socket;
 import java.util.Scanner;
 
 public class EditorClientPAD {
-    private static final String SERVER_ADDRESS = "192.168.240.21";
+    private static String SERVER_ADDRESS;
     private static final int PORT = 11111;
     private static final Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) {
+        if (args.length == 0) {
+            System.out.println("Usage: java EditorClientPAD <server-ip>");
+            return;
+        }
+
+        SERVER_ADDRESS = args[0]; // Take IP address from command line
+
         try (Socket socket = new Socket(SERVER_ADDRESS, PORT);
              BufferedReader reader = new BufferedReader(
                      new InputStreamReader(socket.getInputStream()));
              PrintWriter writer = new PrintWriter(socket.getOutputStream(), true)) {
 
-            System.out.println("Connected to Editor Server");
+            System.out.println("Connected to Editor Server at " + SERVER_ADDRESS);
 
             // --- Authentication Section ---
             System.out.println(reader.readLine()); // "Welcome to Collaborative Document Editor."
@@ -101,7 +108,6 @@ public class EditorClientPAD {
 
                     case 4:
                         writer.println("EDIT");
-                        // Read and display the current note until "END"
                         String noteContent;
                         while (!(noteContent = reader.readLine()).equals("END")) {
                             System.out.println(noteContent);
