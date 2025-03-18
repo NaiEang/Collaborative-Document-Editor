@@ -1,124 +1,96 @@
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketException;
 
 public class EditorServerPAD {
     private static final int PORT = 11111;
 
     public static void main(String[] args) {
-        System.out.println("Starting server on port " + PORT);
+        if (args.length == 0) {
+            System.out.println("Usage: java EditorServerPAD <IPv4 address>");
+            return;
+        }
+
+        String serverAddress = args[0];
+        System.out.println("Starting server on: " + serverAddress);
 
         try (ServerSocket serverSocket = new ServerSocket(PORT)) {
             System.out.println("Editor Server started on port " + PORT);
 
             while (true) {
-                Socket clientSocket = serverSocket.accept();
-                System.out.println("Client connected: " + clientSocket.getInetAddress());
-                new ClientHandler(clientSocket).start();
+                try {
+                    Socket clientSocket = serverSocket.accept();
+                    new ClientHandler(clientSocket).start();
+                } catch (SocketException e) {
+                    System.out.println("Socket exception: " + e.getMessage());
+                } catch (IOException e) {
+                    System.out.println("I/O error: " + e.getMessage());
+                }
             }
         } catch (IOException e) {
             System.out.println("Error starting server: " + e.getMessage());
-            e.printStackTrace();
         }
     }
 }
 
 class ClientHandler extends Thread {
-    private Socket socket;
+    private Socket clientSocket;
 
     public ClientHandler(Socket socket) {
-        this.socket = socket;
+        this.clientSocket = socket;
     }
 
-    @Override
     public void run() {
-        try (
-            BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            PrintWriter writer = new PrintWriter(socket.getOutputStream(), true)
-        ) {
-            writer.println("Welcome to Collaborative Document Editor.");
-            writer.println("Type 'register' to register or 'login' to login:");
+        try (BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+             PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true)) {
 
-            String authChoice = reader.readLine();
+            // Authentication Section
+            out.println("Welcome to Collaborative Document Editor.");
+            out.println("Type 'register' to register or 'login' to login:");
 
-            if ("register".equalsIgnoreCase(authChoice)) {
-                writer.println("Enter new username:");
-                String username = reader.readLine();
-                writer.println("Enter new password:");
-                String password = reader.readLine();
-                // Dummy registration logic (replace with actual DB storage)
-                writer.println("Registration successful for user: " + username);
-            } else if ("login".equalsIgnoreCase(authChoice)) {
-                writer.println("Enter username:");
-                String username = reader.readLine();
-                writer.println("Enter password:");
-                String password = reader.readLine();
-
-                // Dummy authentication logic (replace with actual DB check)
-                if ("admin".equals(username) && "password".equals(password)) {
-                    writer.println("Login successful. Welcome, " + username + "!");
+            String authChoice = in.readLine();
+            if (authChoice.equalsIgnoreCase("register")) {
+                out.println("Enter new username:");
+                String username = in.readLine();
+                out.println("Enter new password:");
+                String password = in.readLine();
+                // Here you would add code to save the new user credentials
+                out.println("Registration successful. You can now login.");
+            } else if (authChoice.equalsIgnoreCase("login")) {
+                out.println("Enter username:");
+                String username = in.readLine();
+                out.println("Enter password:");
+                String password = in.readLine();
+                // Here you would add code to validate the user credentials
+                boolean isValidUser = true; // Replace with actual validation
+                if (isValidUser) {
+                    out.println("Login successful.");
                 } else {
-                    writer.println("Invalid credentials. Disconnecting...");
-                    socket.close();
+                    out.println("Invalid username or password.");
+                    clientSocket.close();
                     return;
                 }
             } else {
-                writer.println("Invalid option. Disconnecting...");
-                socket.close();
+                out.println("Invalid option. Disconnecting.");
+                clientSocket.close();
                 return;
             }
 
-            // Handle client commands
-            while (true) {
-                String command = reader.readLine();
-                if (command == null) break;
-
-                switch (command) {
-                    case "CREATE":
-                        writer.println("Enter note content (type 'END' to finish):");
-                        StringBuilder note = new StringBuilder();
-                        String line;
-                        while (!(line = reader.readLine()).equals("END")) {
-                            note.append(line).append("\n");
-                        }
-                        writer.println("Note created successfully.");
-                        break;
-
-                    case "SAVE":
-                        writer.println("Enter filename to save:");
-                        String filename = reader.readLine();
-                        writer.println("File '" + filename + "' saved successfully.");
-                        break;
-
-                    case "LOAD":
-                        writer.println("Enter filename to load:");
-                        String fileToLoad = reader.readLine();
-                        writer.println("Loaded content of '" + fileToLoad + "':");
-                        writer.println("Sample content...");
-                        writer.println("END");
-                        break;
-
-                    case "EDIT":
-                        writer.println("Current content: Sample content...");
-                        writer.println("Enter your changes (type 'END' to finish):");
-                        while (!(line = reader.readLine()).equals("END")) {
-                            // Handle editing logic
-                        }
-                        writer.println("Note edited successfully.");
-                        break;
-
-                    case "EXIT":
-                        writer.println("Goodbye!");
-                        socket.close();
-                        return;
-
-                    default:
-                        writer.println("Invalid command.");
-                        break;
-                }
+            // Main communication loop
+            String inputLine;
+            while ((inputLine = in.readLine()) != null) {
+                System.out.println("Received: " + inputLine);
+                out.println("Echo: " + inputLine);
             }
         } catch (IOException e) {
-            System.out.println("Client disconnected: " + e.getMessage());
+            System.out.println("Client handler I/O error: " + e.getMessage());
+        } finally {
+            try {
+                clientSocket.close();
+            } catch (IOException e) {
+                System.out.println("Error closing client socket: " + e.getMessage());
+            }
         }
     }
 }
