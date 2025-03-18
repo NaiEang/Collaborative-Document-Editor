@@ -5,7 +5,7 @@ import java.util.Date;
 import java.util.Scanner;
 
 public class EditorClient3 {
-    private static final String SERVER_ADDRESS = "192.168.241.95";  // Change as needed
+    private static final String SERVER_ADDRESS = "172.20.10.2";  // Change as needed
     private static final int PORT = 12345;
 
     public static void main(String[] args) {

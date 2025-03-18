@@ -1,13 +1,19 @@
 import java.io.*;
 import java.net.Socket;
+import java.text.SimpleDateFormat;
 import java.util.Scanner;
+import java.util.Date;
 
 public class EditorClientPAD {
     private static String SERVER_ADDRESS;
     private static final int PORT = 11111;
     private static final Scanner scanner = new Scanner(System.in);
-
+    private static final String FILES_FOLDER = "Files";
     public static void main(String[] args) {
+        File folder = new File(FILES_FOLDER);
+        if (!folder.exists()) {
+            folder.mkdir();
+        }
         if (args.length == 0) {
             System.out.println("Usage: java EditorClientPAD <server-ip>");
             return;
@@ -88,10 +94,12 @@ public class EditorClientPAD {
 
                     case 2:
                         writer.println("SAVE");
-                        System.out.println(reader.readLine()); // "Enter filename to save:"
-                        System.out.print("Filename: ");
                         String filename = scanner.nextLine();
-                        writer.println(filename);
+                        writer.println(FILES_FOLDER + File.separator + filename);
+                        
+                        //Send last modified to server
+                        String lastModified = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+                        writer.println(lastModified); // Send the timestamp to the server
                         System.out.println(reader.readLine()); // Save confirmation
                         break;
 
@@ -99,7 +107,7 @@ public class EditorClientPAD {
                         writer.println("LOAD");
                         System.out.println(reader.readLine()); // "Enter filename to load:"
                         System.out.print("Filename: ");
-                        writer.println(scanner.nextLine());
+                        writer.println(FILES_FOLDER + File.separator + scanner.nextLine());
                         String response = reader.readLine(); // Confirmation or error message
                         System.out.println(response);
                         if (!response.startsWith("Error")) {
@@ -116,7 +124,7 @@ public class EditorClientPAD {
                         writer.println("EDIT");
                         System.out.println(reader.readLine()); // "Enter filename to edit:"
                         System.out.print("Filename: ");
-                        writer.println(scanner.nextLine());
+                        writer.println(FILES_FOLDER + File.separator + scanner.nextLine());
                         while (!(line = reader.readLine()).equals("END")) {
                             System.out.println(line);
                         }
@@ -132,7 +140,7 @@ public class EditorClientPAD {
                         writer.println("DELETE");
                         System.out.println(reader.readLine()); // "Enter filename to delete:"
                         System.out.print("Filename: ");
-                        writer.println(scanner.nextLine());
+                        writer.println(FILES_FOLDER + File.separator + scanner.nextLine());
                         System.out.println(reader.readLine()); // Delete confirmation
                         break;
 

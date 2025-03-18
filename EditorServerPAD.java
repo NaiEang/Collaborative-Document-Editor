@@ -89,11 +89,13 @@ class ClientHandler extends Thread {
                     // Save noteContent to a file or database
                     out.println("Note created successfully.");
                 } else if (inputLine.equals("SAVE")) {
+                    String lastModified = in.readLine();//Read last modified timestamp
                     out.println("Enter filename to save:");
                     String filename = in.readLine();
                     // Save the note content to the specified filename
                     try (FileWriter fileWriter = new FileWriter(filename)) {
                         fileWriter.write(noteContent.toString());
+                        fileWriter.write("\nLast Modified: "+lastModified +"\n");
                         out.println("Note saved successfully.");
                     } catch (IOException e) {
                         out.println("Error saving note: " + e.getMessage());
