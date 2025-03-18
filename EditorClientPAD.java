@@ -3,7 +3,6 @@ import java.net.Socket;
 import java.util.Scanner;
 
 public class EditorClientPAD {
-    private static String SERVER_ADDRESS;
     private static final int PORT = 11111;
     private static final Scanner scanner = new Scanner(System.in);
 
@@ -13,51 +12,48 @@ public class EditorClientPAD {
             return;
         }
 
-        SERVER_ADDRESS = args[0]; // Take IP address from command line
+        String serverAddress = args[0];
 
-        try (Socket socket = new Socket(SERVER_ADDRESS, PORT);
-             BufferedReader reader = new BufferedReader(
-                     new InputStreamReader(socket.getInputStream()));
+        try (Socket socket = new Socket(serverAddress, PORT);
+             BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
              PrintWriter writer = new PrintWriter(socket.getOutputStream(), true)) {
 
-            System.out.println("Connected to Editor Server at " + SERVER_ADDRESS);
+            System.out.println("Connected to Editor Server at " + serverAddress);
 
             // --- Authentication Section ---
-            System.out.println(reader.readLine()); // "Welcome to Collaborative Document Editor."
-            System.out.println(reader.readLine()); // "Type 'register' to register or 'login' to login:"
+            System.out.println(reader.readLine());
+            System.out.println(reader.readLine());
             System.out.print("Your choice: ");
             String authChoice = scanner.nextLine();
             writer.println(authChoice);
 
             if (authChoice.equalsIgnoreCase("register")) {
-                System.out.println(reader.readLine()); // "Enter new username:"
+                System.out.println(reader.readLine());
                 System.out.print("Username: ");
                 writer.println(scanner.nextLine());
-                System.out.println(reader.readLine()); // "Enter new password:"
+                System.out.println(reader.readLine());
                 System.out.print("Password: ");
                 writer.println(scanner.nextLine());
-                System.out.println(reader.readLine()); // Registration success message
+                System.out.println(reader.readLine());
             } else if (authChoice.equalsIgnoreCase("login")) {
-                System.out.println(reader.readLine()); // "Enter username:"
+                System.out.println(reader.readLine());
                 System.out.print("Username: ");
                 writer.println(scanner.nextLine());
-                System.out.println(reader.readLine()); // "Enter password:"
+                System.out.println(reader.readLine());
                 System.out.print("Password: ");
                 writer.println(scanner.nextLine());
                 String authResponse = reader.readLine();
                 System.out.println(authResponse);
                 if (authResponse.startsWith("Invalid")) {
-                    socket.close();
                     return;
                 }
             } else {
-                System.out.println(reader.readLine()); // "Invalid option. Disconnecting."
-                socket.close();
+                System.out.println(reader.readLine());
                 return;
             }
             // --- End Authentication ---
 
-            // Main menu loop
+            // --- Main menu ---
             while (true) {
                 System.out.println("\nConsole Notepad Client");
                 System.out.println("1. Create new note");
@@ -68,70 +64,66 @@ public class EditorClientPAD {
                 System.out.print("Choose an option: ");
 
                 int choice = Integer.parseInt(scanner.nextLine());
-                String line;
 
                 switch (choice) {
                     case 1:
                         writer.println("CREATE");
-                        System.out.println(reader.readLine()); // Prompt for note content
+                        System.out.println(reader.readLine());
+                        String line;
                         while (!(line = scanner.nextLine()).equals("END")) {
                             writer.println(line);
                         }
                         writer.println("END");
-                        System.out.println(reader.readLine()); // Confirmation message
+                        System.out.println(reader.readLine());
                         break;
 
                     case 2:
                         writer.println("SAVE");
-                        System.out.println(reader.readLine()); // "Enter filename to save:"
-                        System.out.print("Filename: ");
+                        System.out.println(reader.readLine());
                         writer.println(scanner.nextLine());
-                        System.out.println(reader.readLine()); // Save confirmation
+                        System.out.println(reader.readLine());
                         break;
 
                     case 3:
                         writer.println("LOAD");
-                        System.out.println(reader.readLine()); // "Enter filename to load:"
-                        System.out.print("Filename: ");
+                        System.out.println(reader.readLine());
                         writer.println(scanner.nextLine());
-                        String response = reader.readLine(); // Confirmation or error message
+                        String response = reader.readLine();
                         System.out.println(response);
                         if (!response.startsWith("Error")) {
-                            while (true) {
-                                String noteLine = reader.readLine();
-                                if (noteLine == null || noteLine.equals("END"))
-                                    break;
-                                System.out.println(noteLine);
+                            while (!(line = reader.readLine()).equals("END")) {
+                                System.out.println(line);
                             }
                         }
                         break;
 
                     case 4:
                         writer.println("EDIT");
-                        String noteContent;
-                        while (!(noteContent = reader.readLine()).equals("END")) {
-                            System.out.println(noteContent);
+                        String content;
+                        while (!(content = reader.readLine()).equals("END")) {
+                            System.out.println(content);
                         }
-                        System.out.println(reader.readLine()); // "Enter your changes..." prompt
+                        System.out.println(reader.readLine());
                         while (!(line = scanner.nextLine()).equals("END")) {
                             writer.println(line);
                         }
                         writer.println("END");
-                        System.out.println(reader.readLine()); // Edit confirmation
+                        System.out.println(reader.readLine());
                         break;
 
                     case 5:
                         writer.println("EXIT");
-                        System.out.println(reader.readLine()); // Goodbye message
+                        System.out.println(reader.readLine());
                         return;
 
                     default:
-                        System.out.println("Invalid choice. Try again.");
+                        System.out.println("Invalid choice.");
                         break;
                 }
             }
         } catch (IOException e) {
-            System.out.println("Error connecting to server: " + e.getMessage());
+            System.out.println("Error: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 }
