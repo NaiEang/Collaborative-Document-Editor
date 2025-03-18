@@ -67,3 +67,10 @@ Bottom-up estimation involves breaking the project into smaller tasks and estima
 #### Potential Problems:
 - Ensuring smooth real-time updates without performance issues.
 
+
+
+##### Training
+  - get your current ipv4
+  - run and compile server file with your ipv4
+  - do the same for client
+  - After creating or editing file, you need to save otherwise you'll lose your updates
