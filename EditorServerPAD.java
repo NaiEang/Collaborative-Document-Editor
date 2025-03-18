@@ -33,9 +33,9 @@ public class EditorServerPAD {
         }
     }
 }
-
 class ClientHandler extends Thread {
     private Socket clientSocket;
+    private StringBuilder noteContent = new StringBuilder(); // Make noteContent a class member
 
     public ClientHandler(Socket socket) {
         this.clientSocket = socket;
@@ -80,8 +80,73 @@ class ClientHandler extends Thread {
             // Main communication loop
             String inputLine;
             while ((inputLine = in.readLine()) != null) {
-                System.out.println("Received: " + inputLine);
-                out.println("Echo: " + inputLine);
+                if (inputLine.equals("CREATE")) {
+                    out.println("Enter note content. Type 'END' to finish:");
+                    noteContent.setLength(0); // Clear previous content
+                    while (!(inputLine = in.readLine()).equals("END")) {
+                        noteContent.append(inputLine).append("\n");
+                    }
+                    // Save noteContent to a file or database
+                    out.println("Note created successfully.");
+                } else if (inputLine.equals("SAVE")) {
+                    out.println("Enter filename to save:");
+                    String filename = in.readLine();
+                    // Save the note content to the specified filename
+                    try (FileWriter fileWriter = new FileWriter(filename)) {
+                        fileWriter.write(noteContent.toString());
+                        out.println("Note saved successfully.");
+                    } catch (IOException e) {
+                        out.println("Error saving note: " + e.getMessage());
+                    }
+                } else if (inputLine.equals("LOAD")) {
+                    out.println("Enter filename to load:");
+                    String filename = in.readLine();
+                    // Load the note content from the specified filename
+                    try (BufferedReader fileReader = new BufferedReader(new FileReader(filename))) {
+                        out.println("Note content:");
+                        String noteLine;
+                        noteContent.setLength(0); // Clear previous content
+                        while ((noteLine = fileReader.readLine()) != null) {
+                            out.println(noteLine);
+                            noteContent.append(noteLine).append("\n"); // Store loaded content
+                        }
+                        out.println("END");
+                    } catch (IOException e) {
+                        out.println("Error loading note: " + e.getMessage());
+                    }
+                } else if (inputLine.equals("EDIT")) {
+                    out.println("Enter filename to edit:");
+                    String filename = in.readLine();
+                    // Load the current note content from the specified filename
+                    try (BufferedReader fileReader = new BufferedReader(new FileReader(filename))) {
+                        out.println("Current note content:");
+                        String noteLine;
+                        noteContent.setLength(0); // Clear previous content
+                        while ((noteLine = fileReader.readLine()) != null) {
+                            out.println(noteLine);
+                            noteContent.append(noteLine).append("\n"); // Store loaded content
+                        }
+                        out.println("END");
+                    } catch (IOException e) {
+                        out.println("Error loading note: " + e.getMessage());
+                    }
+                    out.println("Enter your changes. Type 'END' to finish:");
+                    while (!(inputLine = in.readLine()).equals("END")) {
+                        noteContent.append(inputLine).append("\n");
+                    }
+                    // Save the edited note content
+                    try (FileWriter fileWriter = new FileWriter(filename)) {
+                        fileWriter.write(noteContent.toString());
+                        out.println("Note edited successfully.");
+                    } catch (IOException e) {
+                        out.println("Error saving note: " + e.getMessage());
+                    }
+                } else if (inputLine.equals("EXIT")) {
+                    out.println("Goodbye!");
+                    break;
+                } else {
+                    out.println("Invalid command.");
+                }
             }
         } catch (IOException e) {
             System.out.println("Client handler I/O error: " + e.getMessage());

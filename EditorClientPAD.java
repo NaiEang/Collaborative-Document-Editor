@@ -92,14 +92,6 @@ public class EditorClientPAD {
                         String filename = scanner.nextLine();
                         writer.println(filename);
                         System.out.println(reader.readLine()); // Save confirmation
-
-                        // Save the note content to a file
-                        try (FileWriter fileWriter = new FileWriter(filename)) {
-                            fileWriter.write(noteContent.toString());
-                            System.out.println("Note saved to " + filename);
-                        } catch (IOException e) {
-                            System.out.println("Error saving note: " + e.getMessage());
-                        }
                         break;
 
                     case 3:
@@ -121,6 +113,9 @@ public class EditorClientPAD {
 
                     case 4:
                         writer.println("EDIT");
+                        System.out.println(reader.readLine()); // "Enter filename to edit:"
+                        System.out.print("Filename: ");
+                        writer.println(scanner.nextLine());
                         while (!(line = reader.readLine()).equals("END")) {
                             System.out.println(line);
                         }
