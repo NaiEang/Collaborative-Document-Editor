@@ -141,6 +141,15 @@ class ClientHandler extends Thread {
                     } catch (IOException e) {
                         out.println("Error saving note: " + e.getMessage());
                     }
+                } else if (inputLine.equals("DELETE")) {
+                    out.println("Enter filename to delete:");
+                    String filename = in.readLine();
+                    File file = new File(filename);
+                    if (file.delete()) {
+                        out.println("Note deleted successfully.");
+                    } else {
+                        out.println("Error deleting note.");
+                    }
                 } else if (inputLine.equals("EXIT")) {
                     out.println("Goodbye!");
                     break;

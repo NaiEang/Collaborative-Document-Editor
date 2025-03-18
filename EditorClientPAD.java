@@ -66,7 +66,8 @@ public class EditorClientPAD {
                 System.out.println("2. Save note");
                 System.out.println("3. Load note");
                 System.out.println("4. Edit note");
-                System.out.println("5. Exit");
+                System.out.println("5. Delete note");
+                System.out.println("6. Exit");
                 System.out.print("Choose an option: ");
 
                 int choice = Integer.parseInt(scanner.nextLine());
@@ -128,6 +129,14 @@ public class EditorClientPAD {
                         break;
 
                     case 5:
+                        writer.println("DELETE");
+                        System.out.println(reader.readLine()); // "Enter filename to delete:"
+                        System.out.print("Filename: ");
+                        writer.println(scanner.nextLine());
+                        System.out.println(reader.readLine()); // Delete confirmation
+                        break;
+
+                    case 6:
                         writer.println("EXIT");
                         System.out.println(reader.readLine()); // Goodbye message
                         return;
