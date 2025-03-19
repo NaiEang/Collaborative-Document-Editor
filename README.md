@@ -7,6 +7,15 @@ The goal of this project is to develop a console-based collaborative document ed
 Srun Nai Eang (p20230006), Taing VengChhay (p20230022)
 
   ## Table of Content
+  - [Developers](#developers)
+  - [Unit Test](#unit-test)
+  - [Features](#features)
+  - [Prerequisites](#prerequisites)
+  - [System Requirements](#system-requirements)
+  - [Knowledge Requirements](#knowledge-requirements)
+  - [User Manual](#user-manual)
+  - [Training](#training)
+  
   ## Unit Test
   - Project is not yet bug free
   - We can find those bugs and wish you to complete after we add all the features needed in our system
@@ -26,6 +35,7 @@ Srun Nai Eang (p20230006), Taing VengChhay (p20230022)
   
 
   ## Prerequisites
+
     ### System Requirements
   - Operating System (OS): Window 10 or later
   - Ram: 5GB
