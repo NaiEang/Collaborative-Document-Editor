@@ -15,7 +15,7 @@ Srun Nai Eang (p20230006), Taing VengChhay (p20230022)
   - [Knowledge Requirements](#knowledge-requirements)
   - [User Manual](#user-manual)
   - [Training](#training)
-  
+
   ## Unit Test
   - Project is not yet bug free
   - We can find those bugs and wish you to complete after we add all the features needed in our system
@@ -59,7 +59,7 @@ Srun Nai Eang (p20230006), Taing VengChhay (p20230022)
   - Compile and run the server:
     ```bash
     javac EditorServerPAD.java
-    java EditorServerPAD
+    java EditorServerPAD <server-ip>
     ```
   - Compile and run the client:
     ```bash
@@ -69,4 +69,4 @@ Srun Nai Eang (p20230006), Taing VengChhay (p20230022)
   - Practice the following:
     - Create, save, edit, and delete files.
     - Test collaboration by running multiple clients.
-  - Refer to the "Features" and "User Manual" sections for more details.
+  - Refer to the [Features](#features) and "User Manual" sections for more details.
