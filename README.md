@@ -3,25 +3,60 @@ The goal of this project is to develop a console-based collaborative document ed
 
 # SE Lab 08 - Project Planning and Estimation: Collaborative Document Editor
 
-## Developers
+  ## Developers
 Srun Nai Eang (p20230006), Taing VengChhay (p20230022)
 
-## Table of Content
-## Unit Test
+  ## Table of Content
+  ## Unit Test
   - Project is not yet bug free
   - We can find those bugs and wish you to complete after we add all the features needed in our system
 
-## System Requirements
-- Operating System (OS): Window 10 or later
-- Ram: 5GB
-- IDE: Visual Studio Code(extension pack for java)
-- Tools: Github to clone repository
-- Disk space: Minimun 1.57 MB 
+  ## Features
+  - User Authentication:
+    - Users can register and log in to the system.
+  - File Operations:
+    - Create, save, edit and delete files
+    - Files are saved with a "Last Modified" timestamp.
+  - Collaboration:
+    - Multiple users can connect to the server and work on files.
+  - Real-Time Communication:
+    - The system supports real-time communication for file sharing (future versions).
+    - The version3 can be communicate in real time
+    - This last version can create and save file but not yet able to edit at the same time
+  
 
-## Training
-  - get your current ipv4
-  - run and compile server file with your ipv4
-  - do the same for client
+  ## Prerequisites
+    ### System Requirements
+  - Operating System (OS): Window 10 or later
+  - Ram: 5GB
+  - IDE: Visual Studio Code(extension pack for java)
+  - Tools: Github to clone repository
+  - Disk space: Minimun 1.57 MB 
+
+    ### Knowledge Requirements
+  - Basic understanding of Java programming
+  - Familiarity with Git and GitHub
+  - Basic networking knowledge (e.g., understanding of IPv4)
+
+  ## User Manual
+  - Get your current ipv4 by ruuning ipconfig in your termial
+  - Run and compile server file with your ipv4
+  - Run and compile client file with your ipv4
   - After creating or editing file, you need to save otherwise you'll lose your updates
 
-
+  ## Training
+  - Clone the repository using `git clone https://github.com/NaiEang/Collaborative-Document-Editor.git`.
+  - Compile and run the server:
+    ```bash
+    javac EditorServerPAD.java
+    java EditorServerPAD
+    ```
+  - Compile and run the client:
+    ```bash
+    javac EditorClientPAD.java
+    java EditorClientPAD <server-ip>
+    ```
+  - Practice the following:
+    - Create, save, edit, and delete files.
+    - Test collaboration by running multiple clients.
+  - Refer to the "Features" and "User Manual" sections for more details.
