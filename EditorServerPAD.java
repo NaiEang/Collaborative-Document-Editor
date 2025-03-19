@@ -47,14 +47,14 @@ class ClientHandler extends Thread {
              PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true)) {
 
             // Authentication Section
-            out.println("Welcome to Collaborative Document Editor.");
+            out.println("=== Welcome to Collaborative Document Editor. ===");
             out.println("Type 'register' to register or 'login' to login:");
 
             String authChoice = in.readLine();
             if (authChoice.equalsIgnoreCase("register")) {
-                out.println("Enter new username:");
+                out.print("Enter new username");
                 String username = in.readLine();
-                out.println("Enter new password:");
+                out.println("Enter new password");
                 String password = in.readLine();
                 // Here you would add code to save the new user credentials
                 out.println("Registration successful. You can now login.");

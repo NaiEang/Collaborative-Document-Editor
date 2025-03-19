@@ -1,8 +1,6 @@
 # Collaborative-Document-Editor
 The goal of this project is to develop a console-based collaborative document editor that allows multiple users to open and edit documents simultaneously. The project will be completed by a team of two students within a 4-week deadline. Below is the project plan, estimation, and progress tracking.
 
-# SE Lab 08 - Project Planning and Estimation: Collaborative Document Editor
-
   ## Developers
 Srun Nai Eang (p20230006), Taing VengChhay (p20230022)
 
@@ -15,10 +13,6 @@ Srun Nai Eang (p20230006), Taing VengChhay (p20230022)
   - [Knowledge Requirements](#knowledge-requirements)
   - [User Manual](#user-manual)
   - [Training](#training)
-
-  ## Unit Test
-  - Project is not yet bug free
-  - We can find those bugs and wish you to complete after we add all the features needed in our system
 
   ## Features
   - User Authentication:
@@ -35,15 +29,14 @@ Srun Nai Eang (p20230006), Taing VengChhay (p20230022)
   
 
   ## Prerequisites
-
-    ### System Requirements
+  ### System Requirements
   - Operating System (OS): Window 10 or later
   - Ram: 5GB
   - IDE: Visual Studio Code(extension pack for java)
   - Tools: Github to clone repository
-  - Disk space: Minimun 1.57 MB 
+  - Disk space: Minimun 2 MB 
 
-    ### Knowledge Requirements
+  ### Knowledge Requirements
   - Basic understanding of Java programming
   - Familiarity with Git and GitHub
   - Basic networking knowledge (e.g., understanding of IPv4)

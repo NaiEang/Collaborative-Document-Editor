@@ -95,8 +95,8 @@ public class EditorClientPAD {
                     case 2:
                         writer.println("SAVE");
                         System.out.println(reader.readLine()); // "Enter filename to save:"
+                        System.out.print("Filename: ");
                         String filename = scanner.nextLine();
-                        writer.println(filename);
 
                         writer.println(FILES_FOLDER + File.separator + filename);
                         
