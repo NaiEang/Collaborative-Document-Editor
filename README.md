@@ -69,4 +69,4 @@ Srun Nai Eang (p20230006), Taing VengChhay (p20230022)
   - Practice the following:
     - Create, save, edit, and delete files.
     - Test collaboration by running multiple clients.
-  - Refer to the [Features](#features) and "User Manual" sections for more details.
+  - Refer to the [Features](#features) and [User Manual](#user-manual) sections for more details.
