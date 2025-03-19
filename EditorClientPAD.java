@@ -94,7 +94,10 @@ public class EditorClientPAD {
 
                     case 2:
                         writer.println("SAVE");
+                        System.out.println(reader.readLine()); // "Enter filename to save:"
                         String filename = scanner.nextLine();
+                        writer.println(filename);
+
                         writer.println(FILES_FOLDER + File.separator + filename);
                         
                         //Send last modified to server
@@ -125,14 +128,23 @@ public class EditorClientPAD {
                         System.out.println(reader.readLine()); // "Enter filename to edit:"
                         System.out.print("Filename: ");
                         writer.println(FILES_FOLDER + File.separator + scanner.nextLine());
+
+                        //Display the current note content
                         while (!(line = reader.readLine()).equals("END")) {
                             System.out.println(line);
                         }
+
                         System.out.println(reader.readLine()); // "Enter your changes..." prompt
+                        StringBuilder updatedContent = new StringBuilder();
                         while (!(line = scanner.nextLine()).equals("END")) {
                             writer.println(line);
                         }
                         writer.println("END");
+
+                        //Send update last modified
+                        String lastModifiedEdit = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+                        writer.println(lastModifiedEdit); // Send the timestamp to the server
+
                         System.out.println(reader.readLine()); // Edit confirmation
                         break;
 

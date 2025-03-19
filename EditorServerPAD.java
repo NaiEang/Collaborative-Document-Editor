@@ -2,6 +2,7 @@ import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
+import java.util.Scanner;
 
 public class EditorServerPAD {
     private static final int PORT = 11111;
@@ -89,19 +90,23 @@ class ClientHandler extends Thread {
                     // Save noteContent to a file or database
                     out.println("Note created successfully.");
                 } else if (inputLine.equals("SAVE")) {
-                    String lastModified = in.readLine();//Read last modified timestamp
-                    out.println("Enter filename to save:");
-                    String filename = in.readLine();
-                    // Save the note content to the specified filename
-                    try (FileWriter fileWriter = new FileWriter(filename)) {
-                        fileWriter.write(noteContent.toString());
-                        fileWriter.write("\nLast Modified: "+lastModified +"\n");
+                    out.println("Enter filename to save");
+                    System.out.println("Filename:");
+                    String filename = in.readLine(); // Read the filename from the client
+                    String lastModified = in.readLine(); // Read the last modified timestamp from the client
+
+                    File file = new File(filename);
+
+                    // Save the note content to the file
+                    try (FileWriter fileWriter = new FileWriter(file)) {
+                        fileWriter.write(noteContent.toString()); // Write the note content
+                        fileWriter.write("\nLast Modified: " + lastModified + "\n"); // Append the last modified timestamp
                         out.println("Note saved successfully.");
                     } catch (IOException e) {
                         out.println("Error saving note: " + e.getMessage());
                     }
                 } else if (inputLine.equals("LOAD")) {
-                    out.println("Enter filename to load:");
+                    out.println("Enter filename to load");
                     String filename = in.readLine();
                     // Load the note content from the specified filename
                     try (BufferedReader fileReader = new BufferedReader(new FileReader(filename))) {
@@ -117,14 +122,21 @@ class ClientHandler extends Thread {
                         out.println("Error loading note: " + e.getMessage());
                     }
                 } else if (inputLine.equals("EDIT")) {
-                    out.println("Enter filename to edit:");
+                    out.println("Enter filename to edit");
                     String filename = in.readLine();
+                    File file = new File(filename);
+
+                    if (file.exists()){
                     // Load the current note content from the specified filename
                     try (BufferedReader fileReader = new BufferedReader(new FileReader(filename))) {
                         out.println("Current note content:");
                         String noteLine;
-                        noteContent.setLength(0); // Clear previous content
                         while ((noteLine = fileReader.readLine()) != null) {
+                            if(!noteLine.startsWith("Last Modified:")) {
+                                out.println(noteLine);
+                                noteContent.append(noteLine).append("\n"); // Store loaded content
+                                out.println(noteLine);//Send content to client
+                            }
                             out.println(noteLine);
                             noteContent.append(noteLine).append("\n"); // Store loaded content
                         }
@@ -136,6 +148,11 @@ class ClientHandler extends Thread {
                     while (!(inputLine = in.readLine()).equals("END")) {
                         noteContent.append(inputLine).append("\n");
                     }
+
+                    //Append the updated last modified timestamp
+                    String lastModifiedEdit = in.readLine();
+                    noteContent.append("Last Modified: ").append(lastModifiedEdit).append("\n");
+                    
                     // Save the edited note content
                     try (FileWriter fileWriter = new FileWriter(filename)) {
                         fileWriter.write(noteContent.toString());
@@ -143,6 +160,10 @@ class ClientHandler extends Thread {
                     } catch (IOException e) {
                         out.println("Error saving note: " + e.getMessage());
                     }
+                }
+                else {
+                    out.println("File not found.");
+                }
                 } else if (inputLine.equals("DELETE")) {
                     out.println("Enter filename to delete:");
                     String filename = in.readLine();
@@ -168,5 +189,7 @@ class ClientHandler extends Thread {
                 System.out.println("Error closing client socket: " + e.getMessage());
             }
         }
-    }
+     }
 }
+
+
