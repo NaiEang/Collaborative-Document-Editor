@@ -33,7 +33,7 @@ Srun Nai Eang (p20230006), Taing VengChhay (p20230022)
   - Ram: 5GB
   - IDE: Visual Studio Code(extension pack for java)
   - Tools: Github to clone repository
-  - Disk space: Minimun 2 MB 
+  - Disk space: Minimun 9.23 MB 
 
   ### Knowledge Requirements
   - Basic understanding of Java programming
