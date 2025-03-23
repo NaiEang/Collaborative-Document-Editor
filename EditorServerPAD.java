@@ -57,15 +57,22 @@ class ClientHandler extends Thread {
                 String username = in.readLine();
                 out.println("Enter new password");
                 String password = in.readLine();
+                
+                if (AuthSystem.userExists(username)){
+                    out.println("Username already exists. Please choose another name.");
+                }else{
+                    String hasedPassword = AuthSystem.hashPassword(password);
+                    AuthSystem.saveUser(username, hasedPassword);
+                    out.println("Registration successful. You can now login.");
+                }
                 // Here you would add code to save the new user credentials
-                out.println("Registration successful. You can now login.");
             } else if (authChoice.equalsIgnoreCase("login")) {
                 out.println("Enter username:");
                 String username = in.readLine();
                 out.println("Enter password:");
                 String password = in.readLine();
                 // Here you would add code to validate the user credentials
-                boolean isValidUser = true; // Replace with actual validation
+                boolean isValidUser = AuthSystem.authenticateUser(username, password); 
                 if (isValidUser) {
                     out.println("Login successful.");
                 } else {
