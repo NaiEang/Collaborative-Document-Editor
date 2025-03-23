@@ -23,7 +23,7 @@ public class UserLogin {
     scanner.close();
     }
 
-    private static boolean authenticateUser(String username, String password) {
+    public static boolean authenticateUser(String username, String password) {
         try (BufferedReader reader = new BufferedReader(new FileReader(USERS_FILE))) {
             String line;
             while ((line = reader.readLine()) != null) {
@@ -40,7 +40,7 @@ public class UserLogin {
         return false;
     }
 
-    private static String hashPassword(String password) {
+    public static String hashPassword(String password) {
         try {
             MessageDigest md = MessageDigest.getInstance("SHA-256");
             byte[] hash = md.digest(password.getBytes());

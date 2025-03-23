@@ -2,7 +2,6 @@ import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
-import java.util.Scanner;
 
 public class EditorServerPAD {
     private static final int PORT = 11111;
@@ -39,6 +38,7 @@ public class EditorServerPAD {
 class ClientHandler extends Thread {
     private Socket clientSocket;
     private StringBuilder noteContent = new StringBuilder();
+    private String username; 
 
     public ClientHandler(Socket socket) {
         this.clientSocket = socket;
@@ -55,7 +55,7 @@ class ClientHandler extends Thread {
             String authChoice = in.readLine().trim().toLowerCase();
             if (authChoice.equals("register")) {
                 out.println("Enter new username:");
-                String username = in.readLine();
+                username = in.readLine(); 
                 out.println("Enter new password:");
                 String password = in.readLine();
                 
@@ -64,11 +64,11 @@ class ClientHandler extends Thread {
                 } else {
                     String hashedPassword = AuthSystem.hashPassword(password);
                     AuthSystem.saveUser(username, hashedPassword);
-                    out.println("Registration successful. You can now login.");
+                    out.println("Registration successful.");
                 }
             } else if (authChoice.equals("login")) {
                 out.println("Enter username:");
-                String username = in.readLine();
+                username = in.readLine();
                 out.println("Enter password:");
                 String password = in.readLine();
                 boolean isValidUser = AuthSystem.authenticateUser(username, password); 
@@ -148,9 +148,9 @@ class ClientHandler extends Thread {
             parentDir.mkdirs();
         }
 
-        try (FileWriter fileWriter = new FileWriter(file)) {
+        try (BufferedWriter fileWriter = new BufferedWriter(new FileWriter(file,true))) {
             fileWriter.write(noteContent.toString());
-            fileWriter.write("\nLast Modified: " + lastModified + "\n");
+            fileWriter.write("\nLast Modified by " + username + ": " + lastModified + "\n");
             out.println("Note saved successfully.");
             System.out.println("Note saved to: " + filename);
         } catch (IOException e) {
@@ -192,12 +192,13 @@ class ClientHandler extends Thread {
 
         if (file.exists()) {
             // Load the current note content
-            noteContent.setLength(0); // Clear previous content
+            // noteContent.setLength(0); // Clear previous content
+            java.util.List<String> lines = new java.util.ArrayList<>(); // Declare and initialize 'lines'
             try (BufferedReader fileReader = new BufferedReader(new FileReader(filename))) {
                 String noteLine;
                 while ((noteLine = fileReader.readLine()) != null) {
-                    if (!noteLine.startsWith("Last Modified:")) {
-                        out.println(noteLine);
+                    if (!noteLine.startsWith("Last Modified by ")) {
+                        lines.add(noteLine);
                         noteContent.append(noteLine).append("\n");
                     }
                 }
@@ -205,6 +206,10 @@ class ClientHandler extends Thread {
                 out.println("Error loading note: " + e.getMessage());
                 System.out.println("Error loading note: " + e.getMessage());
                 return;
+            }
+            out.println("Note content:");
+            for (String line : lines) {
+                out.println(line);
             }
             out.println("END"); // Signal end of current content
             
@@ -223,9 +228,17 @@ class ClientHandler extends Thread {
             if (updatedContent.length() == 0) {
                 out.println("No changes made.");
             } else {
+                //remove last line and add new modification date
+                if(!lines.isEmpty()) {
+                    lines.remove(lines.size() - 1);//delete last line
+                }
+                lines.add(updatedContent.toString());
+                lines.add("Last Modified by "+username+": " + lastModifiedEdit);
+
                 try (FileWriter fileWriter = new FileWriter(filename)) {
-                    fileWriter.write(updatedContent.toString());
-                    fileWriter.write("Last Modified: " + lastModifiedEdit + "\n");
+                    for (String line : lines) {
+                        fileWriter.write(line + "\n");
+                    }
                     noteContent = updatedContent; // Update the noteContent with new content
                     out.println("Note edited successfully.");
                     System.out.println("File edited: " + filename);
