@@ -6,7 +6,6 @@ Srun Nai Eang (p20230006), Taing VengChhay (p20230022)
 
   ## Table of Content
   - [Developers](#developers)
-  - [Unit Test](#unit-test)
   - [Features](#features)
   - [Prerequisites](#prerequisites)
   - [System Requirements](#system-requirements)

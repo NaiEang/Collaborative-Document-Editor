@@ -138,6 +138,7 @@ public class EditorClientPAD {
                         StringBuilder updatedContent = new StringBuilder();
                         while (!(line = scanner.nextLine()).equals("END")) {
                             writer.println(line);
+                            updatedContent.append(line).append("\n"); //Store the new content
                         }
                         writer.println("END");
 

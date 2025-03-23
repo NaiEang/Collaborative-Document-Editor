@@ -34,6 +34,7 @@ public class EditorServerPAD {
         }
     }
 }
+
 class ClientHandler extends Thread {
     private Socket clientSocket;
     private StringBuilder noteContent = new StringBuilder(); // Make noteContent a class member
@@ -128,34 +129,39 @@ class ClientHandler extends Thread {
 
                     if (file.exists()){
                     // Load the current note content from the specified filename
+                    noteContent.setLength(0); // Clear previous content
+                    StringBuilder noteContent = new StringBuilder();
                     try (BufferedReader fileReader = new BufferedReader(new FileReader(filename))) {
-                        out.println("Current note content:");
                         String noteLine;
                         while ((noteLine = fileReader.readLine()) != null) {
                             if(!noteLine.startsWith("Last Modified:")) {
                                 out.println(noteLine);
                                 noteContent.append(noteLine).append("\n"); // Store loaded content
-                                out.println(noteLine);//Send content to client
                             }
-                            out.println(noteLine);
-                            noteContent.append(noteLine).append("\n"); // Store loaded content
                         }
-                        out.println("END");
                     } catch (IOException e) {
                         out.println("Error loading note: " + e.getMessage());
+                        return;
                     }
                     out.println("Enter your changes. Type 'END' to finish:");
+                    StringBuilder updateContent = new StringBuilder(noteContent.toString()); //Store previous content
                     while (!(inputLine = in.readLine()).equals("END")) {
-                        noteContent.append(inputLine).append("\n");
+                        updateContent.append(inputLine).append("\n");
                     }
 
-                    //Append the updated last modified timestamp
+                    out.println("Enter last modified timestamp:");
                     String lastModifiedEdit = in.readLine();
-                    noteContent.append("Last Modified: ").append(lastModifiedEdit).append("\n");
-                    
-                    // Save the edited note content
+
+                    //Append the updated last modified timestamp
+                    updateContent.append("Last Modified: ").append(lastModifiedEdit).append("\n");
+
+                    //Save the edited note content
+                    if (noteContent.length()==0){
+                        out.println("No changes made.");
+                        return;
+                    }
                     try (FileWriter fileWriter = new FileWriter(filename)) {
-                        fileWriter.write(noteContent.toString());
+                        fileWriter.write(updateContent.toString());
                         out.println("Note edited successfully.");
                     } catch (IOException e) {
                         out.println("Error saving note: " + e.getMessage());
@@ -163,6 +169,7 @@ class ClientHandler extends Thread {
                 }
                 else {
                     out.println("File not found.");
+                    return;
                 }
                 } else if (inputLine.equals("DELETE")) {
                     out.println("Enter filename to delete:");
@@ -180,16 +187,17 @@ class ClientHandler extends Thread {
                     out.println("Invalid command.");
                 }
             }
-        } catch (IOException e) {
-            System.out.println("Client handler I/O error: " + e.getMessage());
-        } finally {
-            try {
-                clientSocket.close();
-            } catch (IOException e) {
-                System.out.println("Error closing client socket: " + e.getMessage());
-            }
-        }
-     }
+        }catch (IOException e) {
+                System.out.println("Error handling client: " + e.getMessage());
+            }finally {
+                try {
+                    clientSocket.close();
+                } catch (IOException e) {
+                    System.out.println("Error closing client socket: " + e.getMessage());
+                }
+            }   
+    }
 }
+
 
 
