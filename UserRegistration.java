@@ -14,6 +14,7 @@ public class UserRegistration {
 
         if (userExists(username)) {
             System.out.println("User already exists!");
+            scanner.close();
             return;
         }
 
